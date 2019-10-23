@@ -1,3 +1,11 @@
-#Hello world
+import tensorflow as tf
+from tensorflow import keras
+import numpy as np
+import matplotlib.pyplot as plt
 
-print ('This is my first steps in understanding Github repository system. I'm trying not to be a fool.') 
+data = keras.datasets.fashion_mnist
+ 
+(train_images, train_labels), (test_images, test_labels) = data.load_data()
+
+class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
+               'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
