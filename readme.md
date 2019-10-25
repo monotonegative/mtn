@@ -1,11 +1,3 @@
-import tensorflow as tf
-from tensorflow import keras
-import numpy as np
-import matplotlib.pyplot as plt
+Hello, Maxim Lazarev!
 
-data = keras.datasets.fashion_mnist
- 
-(train_images, train_labels), (test_images, test_labels) = data.load_data()
-
-class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
-               'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+Ima glam to present u my little piece of code. It's only 2/3 of full strings, but it's most workable part without any bags.
