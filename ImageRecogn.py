@@ -29,39 +29,39 @@ model = keras.Sequential([
 model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-model.fit(train_images, train_labels, epochs=10)
+model.fit(train_images, train_labels, epochs=3)
 
 prediction = model.predict(test_images)
 
 
 # На данном этапе мне захотелось чтобы предсказание осуществлялось на рандомной картнке из тестового пака.
 # Берем одну картинку из проверочного dataset случайным образом для предсказания класса.
-x = np.random.randint(10001)
+randomImageIndex = np.random.randint(10001)
 print('Рандомный номер картинки из массива test_images:')
-print(x)
+print(randomImageIndex)
 
-img = test_images[x]
+randomImage = test_images[randomImageIndex]
 np.set_printoptions(threshold=np.inf, precision=2)
-print(img)
+print(randomImage)
 print('Размер тестовой картинки [x] из массива test_images:')
-print(img.shape)
+print(randomImage.shape)
 
 # Модели tf.keras оптимизированы для предсказаний на пакетах (batch) данных, или на множестве примеров сразу.
 # Добавляем изображение в пакет данных, состоящий только из одного элемента.
-img = (np.expand_dims(img, 0))
-print('Размер тестового массива одной картинки:')
-print(img.shape)
-prediction_single = model.predict(img)
+randomImage = (np.expand_dims(randomImage, 0))
+print('Размер тестового массива одной картинки: {0}', randomImage.shape)
+
+
+prediction_single = model.predict(randomImage)
 
 print('Массив распределения предсказания:')
 print(prediction_single)
 
-i = x
 plt.figure(figsize=(10, 3))
 plt.subplot(1, 2, 1)
-gu.plot_image(i, prediction, test_labels, test_images)
+gu.plot_image(randomImageIndex, prediction, test_labels, test_images)
 plt.subplot(1, 2, 2)
-gu.plot_value_array(i, prediction, test_labels)
+gu.plot_value_array(randomImageIndex, prediction, test_labels)
 plt.xticks(range(10), gu.class_names, rotation=45)
 plt.show()
 
