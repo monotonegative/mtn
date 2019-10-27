@@ -3,12 +3,8 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 
-class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
-               'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
-
-
-def plot_image(i, predictions_array, true_label, img):
+def plot_image(i, predictions_array, true_label, img, class_names):
   predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]
   plt.grid(False)
   plt.xticks([])
@@ -27,6 +23,7 @@ def plot_image(i, predictions_array, true_label, img):
                                 class_names[true_label]),
                                 color=color)
 
+
 def plot_value_array(i, predictions_array, true_label):
   predictions_array, true_label = predictions_array[i], true_label[i]
   plt.grid(False)
@@ -39,7 +36,8 @@ def plot_value_array(i, predictions_array, true_label):
   thisplot[predicted_label].set_color('red')
   thisplot[true_label].set_color('blue')
 
-def nonlabled_plot_image(img_nbr, predictions_array, img):
+
+def nonlabled_plot_image(img_nbr, predictions_array, img, class_names):
   predictions_array, img = predictions_array[img_nbr], img[img_nbr]
   plt.grid(False)
   plt.xticks([])
