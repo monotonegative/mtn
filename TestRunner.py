@@ -12,4 +12,4 @@ test.verfiy_educated_model_on_test_dataset()
 
 
 # tests on real images
-test.loan_random_image_and_recognize()
+test.loan_random_image_and_recognize() 
