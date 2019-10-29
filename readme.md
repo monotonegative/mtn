@@ -1,4 +1,4 @@
-Hello, traveller!
+Hello, wayfarer!
 
 Welcome to my repository!
 
