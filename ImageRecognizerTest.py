@@ -7,41 +7,53 @@ import constants as c
 import model as m
 
 
-m.imgRecognModel.fit(m.train_images, m.train_labels, epochs=20)
+"""Here model is compiled"""
+m.imgRecognModel.fit(m.train_images, m.train_labels, epochs=1)
 test_loss, test_acc = m.imgRecognModel.evaluate(m.test_images,  m.test_labels, verbose=2)
 
-print('\nТочность на проверочных данных:', test_acc)
+print('\nТочность на проверочных данных:', '%.2f' % (test_acc*100), '%')
 
-# На данном этапе мне захотелось чтобы предсказание осуществлялось на рандомной картнке из тестового пака.
-# Берем одну картинку из проверочного dataset случайным образом для предсказания класса.
+"""Random picking from 0 to 10000 to use lable prediction"""
 randomImageIndex = np.random.randint(10001)
 print('\nРандомный номер картинки из массива m.test_images:',randomImageIndex)
 
-# Модели tf.keras оптимизированы для предсказаний на пакетах (batch) данных, или на множестве примеров сразу.
-# Поэтому, создаем пакет данных состоящий только из одного элемента.
-randomImage = m.test_images[randomImageIndex]
-randomImage = (np.expand_dims(randomImage, 0))
-print('\nРазмер массива одной картинки:', randomImage.shape)
+def random_image():
+    """Модели tf.keras оптимизированы для предсказаний на пакетах (batch) данных, 
+    или на множестве примеров сразу. Поэтому, необходимо создать пакет данных 
+    состоящий только из одного элемента."""
+    randomImage = m.test_images[randomImageIndex]
+    randomImage = (np.expand_dims(randomImage, 0))
+    return(randomImage)
+print('\nРазмер массива одной картинки:', random_image())
 
-randomLabel = m.test_labels[randomImageIndex]
-randomLabel = (np.expand_dims(randomLabel, 0))
-print('\nРазмер массива m.test_images:', randomLabel.shape)
+def random_lable():
+    """A single object array must be done for random lable 
+    related to the random"""
+    randomLabel = m.test_labels[randomImageIndex]
+    randomLabel = (np.expand_dims(randomLabel, 0))
+    return(randomLabel)
+print('\nРазмер массива одного лейбла:', random_lable())
 
-np.set_printoptions(precision=2)
-prediction = m.imgRecognModel.predict(randomImage)
-print('\nМассив предсказания prediction:', prediction)
+def one_img_prediction():
+    """prediction of the only one image"""
+    np.set_printoptions(precision=2)
+    prediction = m.imgRecognModel.predict(random_image())
+    return(prediction)
+print('\nМассив предсказания prediction:', one_img_prediction(), end='\n')
+print('\nИмя предсказанного класса:', c.class_names[np.argmax(one_img_prediction())], end='\n')
 
-fig = plt.figure(figsize=(10,3))
-a = plt.subplot(1, 2, 1)
-a.set_title('Image')
-gu.plot_image(0, prediction, randomLabel, randomImage)
-a = plt.subplot(1, 2, 2)
-a.set_title('Prediction')
-gu.plot_value_array(0, prediction, randomLabel)
-plt.xticks(range(10), c.class_names, rotation=45)
-plt.show()
+def verfiy_trained_model_on_test_image():
+    """Plotting random image and predicted distribution""" 
+    fig = plt.figure(figsize=(10,3))
+    a = plt.subplot(1, 2, 1)
+    a.set_title('Image')
+    gu.plot_image(0, one_img_prediction(), random_lable(), random_image())
+    a = plt.subplot(1, 2, 2)
+    a.set_title('Prediction')
+    gu.plot_value_array(0, one_img_prediction(), random_lable())
+    plt.xticks(range(10), c.class_names, rotation=45)
+plt.show(verfiy_trained_model_on_test_image())
 
-print('\nИмя предсказанного класса:', c.class_names[np.argmax(prediction)])
 
 # Далее мне захотелось взять картинку из интернета и попробовать получить верное предсказание на ней.
 # Картинка приводится к формату тестовых изображений keras.
@@ -66,16 +78,16 @@ for x in range (1,12):
         images = images[: , : , 0]
         Substituting_value = 0
         images[images >= 0.97] = Substituting_value
-        # images = np.array([images]) 
         if i == x:
             break 
     Webpack_images = np.append(Webpack_images, [images], axis = 0)
-    print('\nИзменение размера с добавлением картинок в массив:', Webpack_images.shape)
+    print('\nИзменение размера с добавлением картинок в массив:\n', Webpack_images.shape, end='')
 
 
 plt.figure(figsize=(10,10))
 for i in range(0,12):
-    plt.subplot(5,5,i+1)
+    a=plt.subplot(5,5,i+1)
+    a.set_title('Image: {}' .format(i), fontsize = 8.0)
     plt.xticks([])
     plt.yticks([])
     plt.grid(False)
@@ -93,19 +105,18 @@ num_images = num_rows*num_cols
 plt.figure(figsize=(2*2*num_cols, 2*num_rows))
 for i in range(num_images):
   a = plt.subplot(num_rows, 2*num_cols, 2*i+1)
-  a.set_title('Image: {}' .format(i+1), fontsize = 8.0)
+  a.set_title('Image: {}' .format(i), fontsize = 8.0)
   gu.plot_image(i, prediction_web, c.Webimgpack_lables, Webpack_images)
   a = plt.subplot(num_rows, 2*num_cols, 2*i+2)
-  a.set_title('Prediction: {}' .format(i+1), fontsize = 8.0)
+  a.set_title('Prediction: {}' .format(i), fontsize = 8.0)
   plt.tight_layout()
   gu.plot_value_array(i, prediction_web, c.Webimgpack_lables)
 plt.show()
 
 Webimgpack_lables = (np.expand_dims(c.Webimgpack_lables, 2))
 test_loss, test_acc = m.imgRecognModel.evaluate(Webpack_images,  Webimgpack_lables, verbose=2)
-print('\nТочность в selfmade наборе данных:', test_acc)
+print('\nТочность в selfmade наборе данных:', '%.2f' % (test_acc*100), '%', end='\n')
 
-print('')
 print('Введите номер картинки для вывода детального отчета:')
 
 imgInput = int(input())
